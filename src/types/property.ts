@@ -11,6 +11,7 @@ export interface Property {
   sqft: number;
   yearBuilt: number;
   propertyType: 'Single Family' | 'Condo' | 'Duplex' | 'Multi-Family' | 'Townhouse';
+  status: 'For Sale' | 'For Rent' | 'Sold' | 'Off Market';
   
   // Investment Metrics
   monthlyExpenses: number;

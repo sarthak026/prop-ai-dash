@@ -127,14 +127,26 @@ export const usePropertyData = () => {
     [filteredProperties]
   );
 
+  // Helper functions
+  const updateFilters = (newFilters: PropertyFilters) => {
+    setFilters(newFilters);
+  };
+
+  const resetFilters = () => {
+    setFilters({});
+  };
+
   return {
     properties: filteredProperties,
     allProperties: properties,
+    filteredProperties,
     topDeals,
     marketAnalytics,
     loading,
     filters,
     setFilters,
+    updateFilters,
+    resetFilters,
     availableZipCodes,
     availablePropertyTypes
   };
