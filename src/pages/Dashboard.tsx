@@ -5,40 +5,48 @@ import { PropertyLineChart } from '@/components/Charts/LineChart';
 import { RevenueBarChart } from '@/components/Charts/BarChart';
 import { PropertyDonutChart } from '@/components/Charts/DonutChart';
 import { PropertyListCard } from '@/components/PropertyListCard';
+import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen bg-background">
-      <AppSidebar />
-      
-      <div className="flex-1 ml-64">
-        {/* Header */}
-        <header className="h-16 border-b border-border bg-card px-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="pl-10 pr-4 py-2 bg-muted border-0 rounded-lg w-64 font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar />
+        
+        <SidebarInset>
+          {/* Header */}
+          <header className="sticky top-0 z-10 bg-background border-b border-border px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger />
+                <h1 className="text-2xl font-bold text-foreground">Property Dashboard</h1>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input
+                    type="text"
+                    placeholder="Search..."
+                    className="pl-10 w-64 bg-background border-border"
+                  />
+                </div>
+                
+                <Button variant="ghost" size="icon">
+                  <Bell className="w-5 h-5 text-foreground" />
+                </Button>
+                
+                <ProfileDropdown />
+              </div>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon">
-              <Bell className="w-5 h-5" />
-            </Button>
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-primary-foreground" />
-            </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Main Content */}
-        <main className="p-6 space-y-6">
+          {/* Main Content */}
+          <main className="p-6 space-y-6">
           {/* Metrics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <MetricCard 
@@ -131,9 +139,10 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
-        </main>
+          </main>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
