@@ -1,229 +1,137 @@
-import { useState } from 'react';
-import { PropertyCard } from '@/components/PropertyCard';
-import { MarketOverview } from '@/components/MarketOverview';
-import { PropertyFilters } from '@/components/PropertyFilters';
-import { usePropertyData } from '@/hooks/usePropertyData';
-import { Button } from '@/components/ui/button';
+import { Search, Bell, User, MoreHorizontal } from 'lucide-react';
+import { AppSidebar } from '@/components/AppSidebar';
+import { MetricCard } from '@/components/MetricCard';
+import { PropertyLineChart } from '@/components/Charts/LineChart';
+import { RevenueBarChart } from '@/components/Charts/BarChart';
+import { PropertyDonutChart } from '@/components/Charts/DonutChart';
+import { PropertyListCard } from '@/components/PropertyListCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { RefreshCw, Download, BarChart3, TrendingUp, Brain, Search } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
-  const {
-    properties,
-    topDeals,
-    marketAnalytics,
-    loading,
-    filters,
-    setFilters,
-    availableZipCodes,
-    availablePropertyTypes
-  } = usePropertyData();
-
-  const [view, setView] = useState<'overview' | 'properties'>('overview');
-
-  const handleRefresh = () => {
-    toast.info('Refreshing property data...', {
-      description: 'Fetching latest market insights and AI scores'
-    });
-    // In a real app, this would trigger a data refresh
-    setTimeout(() => {
-      toast.success('Data refreshed successfully!');
-    }, 2000);
-  };
-
-  const handleExport = () => {
-    toast.success('Exporting top deals...', {
-      description: 'Generating PDF report with investment analysis'
-    });
-    // In a real app, this would generate and download a PDF
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background p-4">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header Skeleton */}
-          <div className="flex items-center justify-between">
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-64" />
-              <Skeleton className="h-4 w-48" />
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-10 w-24" />
-              <Skeleton className="h-10 w-24" />
-            </div>
-          </div>
-
-          {/* Overview Skeletons */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map(i => (
-                <Skeleton key={i} className="h-24" />
-              ))}
-            </div>
-            <Skeleton className="h-64" />
-          </div>
-
-          {/* Property Cards Skeletons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <Skeleton key={i} className="h-96" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-gradient-primary text-primary-foreground">
-        <div className="max-w-7xl mx-auto p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-3">
-                <Brain className="w-8 h-8" />
-                PropAI Investment Dashboard
-              </h1>
-              <p className="text-primary-foreground/80 mt-2">
-                AI-powered real estate investment analysis • {properties.length} properties analyzed
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button variant="secondary" onClick={handleRefresh} className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4" />
-                Refresh
-              </Button>
-              <Button variant="secondary" onClick={handleExport} className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Export
-              </Button>
+    <div className="flex min-h-screen bg-background">
+      <AppSidebar />
+      
+      <div className="flex-1 ml-64">
+        {/* Header */}
+        <header className="h-16 border-b border-border bg-card px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="pl-10 pr-4 py-2 bg-muted border-0 rounded-lg w-64 font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
             </div>
           </div>
-        </div>
-      </div>
+          
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon">
+              <Bell className="w-5 h-5" />
+            </Button>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-primary-foreground" />
+            </div>
+          </div>
+        </header>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant={view === 'overview' ? 'default' : 'outline'}
-            onClick={() => setView('overview')}
-            className="flex items-center gap-2"
-          >
-            <BarChart3 className="w-4 h-4" />
-            Market Overview
-          </Button>
-          <Button
-            variant={view === 'properties' ? 'default' : 'outline'}
-            onClick={() => setView('properties')}
-            className="flex items-center gap-2"
-          >
-            <Search className="w-4 h-4" />
-            All Properties
-            <Badge variant="secondary" className="ml-1">
-              {properties.length}
-            </Badge>
-          </Button>
-        </div>
-
-        {view === 'overview' ? (
-          <>
-            {/* Market Overview */}
-            <MarketOverview properties={properties} analytics={marketAnalytics} />
-
-            {/* Top Investment Opportunities */}
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Top Investment Opportunities
-                  <Badge className="bg-gradient-success text-success-foreground">
-                    AI Ranked
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {topDeals.slice(0, 6).map((property, index) => (
-                    <PropertyCard 
-                      key={property.id} 
-                      property={property} 
-                      rank={index + 1}
-                    />
-                  ))}
-                </div>
-                {topDeals.length > 6 && (
-                  <div className="text-center mt-6">
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setView('properties')}
-                      className="flex items-center gap-2"
-                    >
-                      View All {topDeals.length} Properties
-                      <TrendingUp className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </>
-        ) : (
-          <>
-            {/* Filters */}
-            <PropertyFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              availableZipCodes={availableZipCodes}
-              availablePropertyTypes={availablePropertyTypes}
+        {/* Main Content */}
+        <main className="p-6 space-y-6">
+          {/* Metrics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard 
+              title="Total Properties"
+              value="$4,562"
+              subtitle="431 more to break last month record"
+              variant="primary"
             />
+            <MetricCard 
+              title="Properties for Sale"
+              value="$2,356"
+              target="Target 36/month"
+            />
+            <MetricCard 
+              title="Properties for Rent"
+              value="$2,206"
+              target="Target 36/month"
+            />
+            <MetricCard 
+              title="Property Sale & Rent"
+              value="$678,345"
+            />
+          </div>
 
-            {/* Properties Grid */}
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Search className="w-5 h-5" />
-                    All Properties
-                  </span>
-                  <Badge variant="secondary">
-                    {properties.length} results
-                  </Badge>
-                </CardTitle>
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Line Chart */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="font-heading font-semibold">Total Overview</CardTitle>
+                  <select className="font-body text-sm bg-transparent border-none focus:outline-none text-muted-foreground">
+                    <option>Month</option>
+                    <option>Year</option>
+                  </select>
+                </CardHeader>
+                <CardContent>
+                  <PropertyLineChart />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Donut Chart */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="font-heading font-semibold">Property Sale & Rent</CardTitle>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
               </CardHeader>
-              <CardContent>
-                {properties.length === 0 ? (
-                  <div className="text-center py-12">
-                    <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-muted-foreground mb-2">
-                      No properties match your filters
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Try adjusting your search criteria to see more results
-                    </p>
-                    <Button variant="outline" onClick={() => setFilters({})}>
-                      Clear All Filters
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {properties.map((property, index) => (
-                      <PropertyCard 
-                        key={property.id} 
-                        property={property} 
-                        rank={index + 1}
-                      />
-                    ))}
-                  </div>
-                )}
+              <CardContent className="flex justify-center">
+                <PropertyDonutChart />
               </CardContent>
             </Card>
-          </>
-        )}
+          </div>
+
+          {/* Bottom Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Revenue Bar Chart */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-heading font-semibold">Total Revenue</CardTitle>
+                  <p className="font-heading font-bold text-2xl text-foreground">$678,345</p>
+                </CardHeader>
+                <CardContent>
+                  <RevenueBarChart />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* New List */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="font-heading font-semibold">New List</CardTitle>
+                <Button variant="ghost" className="font-body text-sm text-primary">
+                  View All
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <PropertyListCard 
+                  image="/placeholder.svg"
+                  address="18 Abernethy Street, Westangara"
+                  bedrooms={5}
+                  bathrooms={2}
+                  area={3}
+                  price="$2500.00"
+                  status="For Sale"
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
     </div>
   );
