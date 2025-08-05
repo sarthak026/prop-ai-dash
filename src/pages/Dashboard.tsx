@@ -9,21 +9,18 @@ import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 
 const Dashboard = () => {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        
-        <SidebarInset>
-          {/* Header */}
-          <header className="sticky top-0 z-10 bg-background border-b border-border px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <h1 className="text-2xl font-bold text-foreground">Property Dashboard</h1>
+    <div className="flex min-h-screen w-full bg-background">
+      <AppSidebar />
+      
+      <div className="flex-1 flex flex-col">{/* Main content wrapper */}
+        {/* Header */}
+        <header className="sticky top-0 z-10 bg-background border-b border-border px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-bold text-foreground">Property Dashboard</h1>
               </div>
               
               <div className="flex items-center gap-4">
@@ -139,10 +136,9 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
-          </main>
-        </SidebarInset>
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
